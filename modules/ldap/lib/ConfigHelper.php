@@ -190,6 +190,12 @@ class sspmod_ldap_ConfigHelper {
 			}
 
 			$dn = $ldap->searchfordn($this->searchBase, $this->searchAttributes, $username, TRUE);
+			
+			$attr = $ldap->getAttributes($dn, array('*', '+'));
+			if (isset($attr['pwdAccountLockedTime'])) {
+			        throw new SimpleSAML_Error_Error('ACCOUNTLOCKED');
+			}
+			
 			if ($dn === NULL) {
 				/* User not found with search. */
 				SimpleSAML_Logger::info($this->location . ': Unable to find users DN. username=\'' . $username . '\'');
